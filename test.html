@@ -1,21 +1,137 @@
 <HEAD>
   <style type="text/css">
-  .dashboard {
+
+  .dashboard-container{
+    display: flex;
+    justify-content: center
+  }
+
+  .container { 
+    width: 900px;
+  }
+
+  .leds {
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-around;
+    background-color: grey
+  }
+
+  .gauge {
     background-color: gray;
     padding: 20px;
-    width: 600px;
-    justify-content: center;
+    justify-content: space-around;
     display: flex;
   }
+
+  .led-box {
+  height: 100px;
+  width: 100px;
+  margin: 10px 0;
+}
+
+.led-box p {
+  font-size: 12px;
+  text-align: center;
+  margin: 1em;
+}
+
+.led-white {
+  margin: 0 auto;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset darkgray 0 -1px 9px, lightslategray 0 2px 12px;
+}
   </style>
 </HEAD>
 <BODY onload="PageInit()">  <!-- create FreeMASTER ActiveX object "fmstr" --> 
  <OBJECT id="fmstr" height="0" width="0" classid="clsid:48A185F1-FFDB-11D3-80E3-00C04F176153"></OBJECT>  
  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
- <script type="text/javascript" src="./dashboard.js"></script>
+ <script type="text/javascript">
+ google.charts.load('current', {'packages':['gauge']});
+google.charts.setOnLoadCallback(drawChart);
 
+function drawChart() {
 
- <div id="chart_div" class="dashboard"></div>
+  var data = google.visualization.arrayToDataTable([
+    ['Label', 'Value'],
+    [' Memory', 80],
+    ['CPU', 55],
+    ['Network', 68]
+  ]);
 
+  var options = {
+    width: 400, height: 120,
+    redFrom: 90, redTo: 100,
+    yellowFrom:75, yellowTo: 90,
+    minorTicks: 5
+  };
 
+  var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+
+  setInterval(function() {
+    data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+    chart.draw(data, options);
+  }, 13000);
+  setInterval(function() {
+    data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
+    chart.draw(data, options);
+  }, 5000);
+  setInterval(function() {
+    data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
+    chart.draw(data, options);
+  }, 26000);
+}
+
+function PageInit() {
+  setInterval(function() {
+    setTimeout(function() {
+      killLed('led-one');
+      killLed('led-four');
+    }, 2000);
+
+    lightLed('led-one');
+    lightLed('led-four');
+    
+  },5000)
+}
+
+function lightLed(id) {
+  let btn = document.getElementById(id);
+  btn.style.backgroundColor = 'red';
+}
+
+function killLed(id) {
+  let btn = document.getElementById(id);
+  btn.style.backgroundColor = 'white';
+}
+</script>
+
+ <div class="dashboard-container">
+   <div class="container">
+      <div class="leds">
+          <div class="led-box">
+            <div class="led-white" id='led-one'></div>
+            <p>LED one</p>
+          </div>
+          <div class="led-box">
+            <div class="led-white" id='led-two'></div>
+            <p>LED two</p>
+          </div>
+          <div class="led-box">
+            <div class="led-white" id='led-three'></div>
+            <p>LED three</p>
+          </div>
+          <div class="led-box">
+            <div class="led-white" id='led-four'></div>
+            <p>LED four</p>
+          </div>
+        </div>
+       <div id="chart_div" class="gauge"></div>
+   </div>
+ </div>
 </BODY>
