@@ -1,0 +1,21 @@
+<HEAD>
+  <style type="text/css">
+  .dashboard {
+    background-color: gray;
+    padding: 20px;
+    width: 600px;
+    justify-content: center;
+    display: flex;
+  }
+  </style>
+</HEAD>
+<BODY onload="PageInit()">  <!-- create FreeMASTER ActiveX object "fmstr" --> 
+ <OBJECT id="fmstr" height="0" width="0" classid="clsid:48A185F1-FFDB-11D3-80E3-00C04F176153"></OBJECT>  
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ <script type="text/javascript" src="./dashboard.js"></script>
+
+
+ <div id="chart_div" class="dashboard"></div>
+
+
+</BODY>
