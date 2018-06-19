@@ -3,18 +3,23 @@
 
   .dashboard-container{
     display: flex;
-    justify-content: center
+    justify-content: center;
   }
 
   .container { 
     width: 900px;
+    display: flex;
+    justify-content: center;
   }
 
-  .leds {
+  .led-container {
     padding-top: 50px;
+    background-color: grey;
+  }
+
+  .led-row {
     display: flex;
-    justify-content: space-around;
-    background-color: grey
+    justify-content: center;
   }
 
   .gauge {
@@ -22,6 +27,7 @@
     padding: 20px;
     justify-content: space-around;
     display: flex;
+    align-items: center
   }
 
   .led-box {
@@ -55,11 +61,13 @@ google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
 
-  var data = google.visualization.arrayToDataTable([
+  var dataLeft = google.visualization.arrayToDataTable([
     ['Label', 'Value'],
-    [' Memory', 80],
-    ['CPU', 55],
-    ['Network', 68]
+    [' Left', 80]
+  ]);
+  var dataRight = google.visualization.arrayToDataTable([
+    ['Label', 'Value'],
+    [' Right', 40]
   ]);
 
   var options = {
@@ -69,22 +77,20 @@ function drawChart() {
     minorTicks: 5
   };
 
-  var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+  var chartLeft = new google.visualization.Gauge(document.getElementById('gauge_left'));
+  var chartRight = new google.visualization.Gauge(document.getElementById('gauge_right'));
 
-  chart.draw(data, options);
+  chartLeft.draw(dataLeft, options);
+  chartRight.draw(dataRight, options);
 
   setInterval(function() {
-    data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-    chart.draw(data, options);
-  }, 13000);
-  setInterval(function() {
-    data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
-    chart.draw(data, options);
+    dataLeft.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+    chartLeft.draw(dataLeft, options);
   }, 5000);
   setInterval(function() {
-    data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
-    chart.draw(data, options);
-  }, 26000);
+    dataRight.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+    chartRight.draw(dataRight, options);
+  }, 5000);
 }
 
 function PageInit() {
@@ -113,25 +119,32 @@ function killLed(id) {
 
  <div class="dashboard-container">
    <div class="container">
-      <div class="leds">
-          <div class="led-box">
-            <div class="led-white" id='led-one'></div>
-            <p>LED one</p>
-          </div>
-          <div class="led-box">
-            <div class="led-white" id='led-two'></div>
-            <p>LED two</p>
-          </div>
-          <div class="led-box">
-            <div class="led-white" id='led-three'></div>
-            <p>LED three</p>
-          </div>
-          <div class="led-box">
-            <div class="led-white" id='led-four'></div>
-            <p>LED four</p>
-          </div>
+       <div id="gauge_left" class="gauge"></div>
+       <div class="led-container">
+         <div class="led-row">
+            <div class="led-box">
+                <div class="led-white" id='led-one'></div>
+                <p>LED one</p>
+              </div>
+              <div class="led-box">
+                <div class="led-white" id='led-two'></div>
+                <p>LED two</p>
+              </div>
+         </div>
+         <div class="led-row">
+            <div class="led-box">
+                <div class="led-white" id='led-three'></div>
+                <p>LED three</p>
+              </div>
+              <div class="led-box">
+                <div class="led-white" id='led-four'></div>
+                <p>LED four</p>
+              </div>
         </div>
-       <div id="chart_div" class="gauge"></div>
+         
+         
+      </div>
+      <div id="gauge_right" class="gauge"></div>
    </div>
  </div>
 </BODY>
