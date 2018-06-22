@@ -114,33 +114,41 @@ function drawChart() {
 
   var dataLeft = google.visualization.arrayToDataTable([
     ['Label', 'Value'],
-    [' Left', 80]
+    ['', 800]
   ]);
   var dataRight = google.visualization.arrayToDataTable([
     ['Label', 'Value'],
-    [' Right', 40]
+    ['', 40]
   ]);
 
-  var options = {
+  var optionsRPM = {
     width: 500, height: 200,
-    redFrom: 75, redTo: 100,
-    minorTicks: 5
+    redFrom: 4500, redTo: 5500,
+    minorTicks: 5,
+    majorTicks: ['0','10', '20', '30', '40', '50'],
+    max: 5000,
+  };
+  var optionsSpeed = {
+    width: 500, height: 200,
+    majorTicks: ['0', '20', '40', '60', '80', '100', '120', '140', '160', '180', '200'],
+    max: 220,
+    minorTicks: 4
   };
 
   var chartLeft = new google.visualization.Gauge(document.getElementById('gauge_left'));
   var chartRight = new google.visualization.Gauge(document.getElementById('gauge_right'));
 
-  chartLeft.draw(dataLeft, options);
-  chartRight.draw(dataRight, options);
+  chartLeft.draw(dataLeft, optionsRPM);
+  chartRight.draw(dataRight, optionsSpeed);
 
   setInterval(function() {
-    dataLeft.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-    chartLeft.draw(dataLeft, options);
-  }, 5000);
+    dataLeft.setValue(0, 1, 100 *Math.round(60 * Math.random()));
+    chartLeft.draw(dataLeft, optionsRPM);
+  }, 1000);
   setInterval(function() {
     dataRight.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-    chartRight.draw(dataRight, options);
-  }, 5000);
+    chartRight.draw(dataRight, optionsSpeed);
+  }, 1000);
 }
 
 function PageInit() {
@@ -169,13 +177,20 @@ function setDateAndTime() {
   const newDate = new Date();
   let date = newDate.toDateString().split(' '); // ["ziua", "luna", "nr zile", "anul"]
   document.getElementById('dashboard-date').innerText = date[2] + ' ' + date[1] + ' ' + date[0] ; // 17 mar thu
-  document.getElementById('dashboard-time').innerText = newDate.getHours() + ':' + newDate.getMinutes();
+  document.getElementById('dashboard-time').innerText = formatNumber(newDate.getHours()) + ':' + formatNumber(newDate.getMinutes());
 }
 
 function updateTime() {
   let date = new Date();
-  document.getElementById('dashboard-time').innerText = date.getHours() + ':' + date.getMinutes();
+  document.getElementById('dashboard-time').innerText = formatNumber(date.getHours()) + ':' + formatNumber(date.getMinutes());
 
+}
+
+function formatNumber(number) {
+  if (number < 10) {
+    return '0' + number;
+  }
+  return number;
 }
 
 var ledOff = { 
